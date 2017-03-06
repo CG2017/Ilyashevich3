@@ -1,0 +1,70 @@
+﻿<Window x:Class="Lab_2_Shader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shaders="clr-namespace:Shazzam.Shaders"
+        xmlns:conv="clr-namespace:Lab_2_Shader.Converters"
+        xmlns:viewModels="clr-namespace:Lab_2_Shader.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" WindowState="Maximized">
+    <Window.DataContext>
+        <viewModels:ColorChangerViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <conv:ColorConverter x:Key="ColorConverter"></conv:ColorConverter>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Image x:Name="Image" Grid.Column="0" Grid.Row="0" Source="Images/green2.jpg" 
+               Margin="10" MouseDown="Image_MouseDown">
+            <Image.Effect>
+                <shaders:MyShaderEffect x:Name="MyShaderEffect" 
+                                        Tolerance="{Binding Tolerance}"
+                                        KeyColor="{Binding SourceColor}"
+                                        TargetColor="{Binding TargetColor}"/>
+            </Image.Effect>
+        </Image>
+        <Grid Grid.Column="1" Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Content="Tolarence:" Grid.Row="0"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Slider Grid.Column="0" x:Name="ToleranceSlider" Maximum="1" Minimum="0" 
+                        Value="{Binding Tolerance, Mode=TwoWay}"/>
+                <TextBox Grid.Column="1" 
+                         Text="{Binding Tolerance, Mode=TwoWay}"/>
+            </Grid>
+            <Image Grid.Row="2" x:Name="Picker" Source="Images/ColorRange.png" VerticalAlignment="Stretch"
+               Margin="10" MouseDown="Picker_MouseDown"/>
+        </Grid>
+
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="10">
+            <Label Content="Source color:"/>
+            <Border Background="{Binding SourceColor, Converter={StaticResource ColorConverter}}" Height="100" 
+                    HorizontalAlignment="Stretch"/>
+            <TextBox Text="{Binding SourceColor, Mode=TwoWay}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10">
+            <Label Content="Target color:"/>
+            <Border Background="{Binding TargetColor, Converter={StaticResource ColorConverter}}" Height="100" 
+                    HorizontalAlignment="Stretch"/>
+            <TextBox Text="{Binding TargetColor, Mode=TwoWay}"/>
+        </StackPanel>
+    </Grid>
+</Window>
