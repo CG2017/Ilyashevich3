@@ -17,14 +17,14 @@ using System.Windows.Media.Media3D;
 
 namespace Shazzam.Shaders {
 	
-	public class MyShaderEffect : ShaderEffect {
-		public static readonly DependencyProperty InputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(MyShaderEffect), 0);
-		public static readonly DependencyProperty ToleranceProperty = DependencyProperty.Register("Tolerance", typeof(double), typeof(MyShaderEffect), new UIPropertyMetadata(((double)(0.1D)), PixelShaderConstantCallback(0)));
-		public static readonly DependencyProperty KeyColorProperty = DependencyProperty.Register("KeyColor", typeof(Color), typeof(MyShaderEffect), new UIPropertyMetadata(Color.FromArgb(255, 194, 0, 15), PixelShaderConstantCallback(1)));
-		public static readonly DependencyProperty TargetColorProperty = DependencyProperty.Register("TargetColor", typeof(Color), typeof(MyShaderEffect), new UIPropertyMetadata(Color.FromArgb(255, 0, 128, 0), PixelShaderConstantCallback(2)));
-		public MyShaderEffect() {
+	public class MyShader94Effect : ShaderEffect {
+		public static readonly DependencyProperty InputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(MyShader94Effect), 0);
+		public static readonly DependencyProperty ToleranceProperty = DependencyProperty.Register("Tolerance", typeof(double), typeof(MyShader94Effect), new UIPropertyMetadata(((double)(0.12D)), PixelShaderConstantCallback(0)));
+		public static readonly DependencyProperty KeyColorProperty = DependencyProperty.Register("KeyColor", typeof(Color), typeof(MyShader94Effect), new UIPropertyMetadata(Color.FromArgb(255, 0, 128, 0), PixelShaderConstantCallback(1)));
+		public static readonly DependencyProperty TargetColorProperty = DependencyProperty.Register("TargetColor", typeof(Color), typeof(MyShader94Effect), new UIPropertyMetadata(Color.FromArgb(255, 255, 255, 0), PixelShaderConstantCallback(2)));
+		public MyShader94Effect() {
 			PixelShader pixelShader = new PixelShader();
-			pixelShader.UriSource = new Uri(@"/Shader/MyShaderEffect.ps", UriKind.Relative);
+			pixelShader.UriSource = new Uri(@"/Shader/MyShader94Effect.ps", UriKind.Relative);
 			this.PixelShader = pixelShader;
 
 			this.UpdateShaderValue(InputProperty);

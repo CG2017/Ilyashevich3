@@ -24,15 +24,22 @@
             <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Image x:Name="Image" Grid.Column="0" Grid.Row="0" Source="Images/green2.jpg" 
-               Margin="10" MouseDown="Image_MouseDown">
-            <Image.Effect>
-                <shaders:MyShaderEffect x:Name="MyShaderEffect" 
-                                        Tolerance="{Binding Tolerance}"
-                                        KeyColor="{Binding SourceColor}"
-                                        TargetColor="{Binding TargetColor}"/>
-            </Image.Effect>
-        </Image>
+        <Grid Grid.Column="0" Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <!--<RowDefinition Height="Auto"/>-->
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <!--<ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding ShaderNames}" SelectedIndex="0"/>-->
+            <Image x:Name="Image" Grid.Column="0" Grid.Row="0" Source="Images/5.jpg" 
+                   Margin="10" MouseDown="Image_MouseDown">
+                <Image.Effect>
+                    <shaders:MyShaderEffect x:Name="MyShaderEffect" 
+                                            Tolerance="{Binding Tolerance}"
+                                            KeyColor="{Binding SourceColor}"
+                                            TargetColor="{Binding TargetColor}"/>
+                </Image.Effect>
+            </Image>
+        </Grid>
         <Grid Grid.Column="1" Grid.Row="0" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

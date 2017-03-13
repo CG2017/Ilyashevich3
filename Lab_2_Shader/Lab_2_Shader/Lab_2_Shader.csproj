@@ -76,6 +76,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverter.cs" />
+    <Compile Include="ShaderKeys.cs" />
+    <Compile Include="Shader\MyShader94Effect.cs" />
     <Compile Include="Shader\MyShaderEffect.cs" />
     <Compile Include="ViewModel\ColorChangerViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -118,6 +120,7 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="Shader\MyShader.fx" />
+    <Resource Include="Shader\MyShader94Effect.ps" />
     <Resource Include="Shader\MyShaderEffect.ps" />
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +136,12 @@
   <ItemGroup>
     <Resource Include="Images\ColorRange.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\green-car.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\MyShader94.fx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

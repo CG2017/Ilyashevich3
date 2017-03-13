@@ -6,18 +6,19 @@ sampler2D input : register(s0);
 /// <summary>Difference.</summary>
 /// <minValue>0/minValue>
 /// <maxValue>1</maxValue>
-/// <defaultValue>0.1</defaultValue>
+/// <defaultValue>0.12</defaultValue>
 float Tolerance : register(C0);
 /// <summary>The color that becomes changed.</summary>
-/// <defaultValue>#FFC2000F</defaultValue>
+/// <defaultValue>Green</defaultValue>
 float4 KeyColor : register(C1);
 
 /// <summary>The target color.</summary>
-/// <defaultValue>Green</defaultValue>
+/// <defaultValue>Yellow</defaultValue>
 float4 TargetColor : register(C2);
 
-float3 rgb_to_lab(float3 rgb : COLOR) ;
-float3 lab_to_rgb(float3 lab ) : COLOR;
+float3 rgb_to_lab(float3 rgb : COLOR) : COLOR;
+float3 lab_to_rgb(float3 lab : COLOR) : COLOR;
+float get_difference(float3 lab1, float3 lab2);
 
 float4 main(float2 uv : TEXCOORD) : COLOR 
 { 
@@ -31,15 +32,15 @@ float4 main(float2 uv : TEXCOORD) : COLOR
   float3 lab_target = rgb_to_lab(TargetColor.rgb / TargetColor.a);
   float3 lab_key = rgb_to_lab(KeyColor.rgb / KeyColor.a);
   
-  float dif_l = lab_source.x - lab_key.x;
-  float dif_a = lab_source.y - lab_key.y;
-  float dif_b = lab_source.z - lab_key.z;
+  float dif_l = lab_source.r - lab_key.r;
+  float dif_a = lab_source.g - lab_key.g;
+  float dif_b = lab_source.b - lab_key.b;
   
   float4 rgb3 = color;
   
-  if (sqrt( pow(abs(dif_l), 2) + pow(abs(dif_a), 2) + pow(abs(dif_b), 2)) < Tolerance)
+  if (1 - get_difference(lab_source, lab_key) < Tolerance)
 	{
-      float3 lab_source2= float3(lab_target.r + dif_l, lab_target.g + dif_a, lab_target.b + dif_b);
+      float3 lab_source2 = float3(lab_target.r + dif_l, lab_target.g + dif_a, lab_target.b + dif_b);
       float3 rgb2 = lab_to_rgb(lab_source2);
       rgb3 = float4(rgb2 * color.a, color.a);
   }
@@ -48,16 +49,29 @@ float4 main(float2 uv : TEXCOORD) : COLOR
   }
 	return rgb3;
 }
-
+float get_difference(float3 lab1, float3 lab2)
+{
+	float delta_L = lab1.x - lab1.x;
+	float C1 = sqrt( lab1.y*lab1.y + lab1.z*lab1.z);
+	float C2 = sqrt( lab2.y*lab2.y + lab2.z*lab2.z);
+	float delta_a = lab1.y + lab2.y;
+	float delta_b = lab1.z + lab2.z;
+	float delta_C = C1 - C2;
+	float delta_H = sqrt( delta_a* delta_a + delta_b * delta_b - delta_C * delta_C);
+	float S_L = 1;
+	float S_C = 1 + 0.045 * C1;
+	float S_H = 1 + 0.015 * C1;
+	return sqrt( pow( delta_L /S_L,2) + pow( delta_C / S_C,2) + pow( delta_H /S_H,2));
+}
 float3 rgb_to_lab(float3 rgb : COLOR)
 {
 	float var_R = ( rgb.r / 255.0f );        //R from 0 to 255
 	float var_G = ( rgb.g / 255.0f );        //G from 0 to 255
 	float var_B = ( rgb.b / 255.0f );        //B from 0 to 255
 
-	if ( var_R > 0.04045f ) 
+	if ( var_R > 0.04045 ) 
 	{
-		var_R = pow( ( var_R + 0.055f ) / 1.055f , 2.4f);
+		var_R = pow( (abs( var_R + 0.055f ) / 1.055f ), 2.4f);
 	}
 	else  
 	{
@@ -65,7 +79,7 @@ float3 rgb_to_lab(float3 rgb : COLOR)
 	}
 	if ( var_G > 0.04045f ) 
 	{
-		var_G = pow( (var_G + 0.055f ) / 1.055f , 2.4f);
+		var_G = pow( ( abs( var_G + 0.055f ) / 1.055f ), 2.4f);
 	}
 	else
 	{
@@ -73,7 +87,7 @@ float3 rgb_to_lab(float3 rgb : COLOR)
 	}
 	if ( var_B > 0.04045f ) 
 	{
-		var_B = pow( ( var_B + 0.055f ) / 1.055f , 2.4f);
+		var_B = pow( ( abs( var_B + 0.055f ) / 1.055f ), 2.4f);
 	}
 	else 
 	{
@@ -84,7 +98,7 @@ float3 rgb_to_lab(float3 rgb : COLOR)
 	var_G = var_G * 100.0f;
 	var_B = var_B * 100.0f;
 
-	//Observer. = 2°, Illuminant = D65
+	//Observer. = 2?, Illuminant = D65
 	float X = var_R * 0.4124f + var_G * 0.3576f + var_B * 0.1805f;
 	float Y = var_R * 0.2126f + var_G * 0.7152f + var_B * 0.0722f;
 	float Z = var_R * 0.0193f + var_G * 0.1192f + var_B * 0.9505f;
@@ -92,13 +106,13 @@ float3 rgb_to_lab(float3 rgb : COLOR)
 	float ref_X = 95.047f;
   float ref_Y = 100.000f;
   float ref_Z = 108.883f;
-  float var_X = X/ref_X;          //ref_X =  95.047   Observer= 2°, Illuminant= D65
+  float var_X = X/ref_X;          //ref_X =  95.047   Observer= 2?, Illuminant= D65
   float var_Y = Y/ref_Y;          //ref_Y = 100.000
   float var_Z = Z/ref_Z;         //ref_Z = 108.883
 
   if (var_X > 0.008856f) 
   {
-  	var_X = pow(var_X, (1.0f/3.0f));
+  	var_X = pow(abs(var_X), (1.0f/3.0f));
   }
   else 
   {
@@ -106,7 +120,7 @@ float3 rgb_to_lab(float3 rgb : COLOR)
   }
   if (var_Y > 0.008856f) 
   {
-  	var_Y = pow(var_Y, (1.0f/3.0f));
+  	var_Y = pow(abs(var_Y), (1.0f/3.0f));
   }
   else 
   {
@@ -114,14 +128,14 @@ float3 rgb_to_lab(float3 rgb : COLOR)
   }
   if (var_Z > 0.008856f) 
   {
-  	var_Z = pow(var_Z, 1.0f/3.0f);
+  	var_Z = pow(abs(var_Z), 1.0f/3.0f);
   }
   else 
   {
   	var_Z = (7.787f*var_Z) + (16.0f/116.0f);
   }
 	
-	return float3((116.0f*var_Y) - 16.0f, 500*(var_X - var_Y), 200.0f*(var_Y - var_Z));
+	return float3((116.0f*var_Y) - 16.0f,(116.0f*var_Y) - 16.0f, 200.0f*(var_Y - var_Z));
 }
 
 float3 lab_to_rgb(float3 lab) : COLOR
@@ -158,12 +172,12 @@ float3 lab_to_rgb(float3 lab) : COLOR
             float ref_X = 95.047f;
             float ref_Y = 100.000f;
             float ref_Z = 108.883f;
-            float X = ref_X*var_X;     //ref_X =  95.047     Observer= 2°, Illuminant= D65
+            float X = ref_X*var_X;     //ref_X =  95.047     Observer= 2?, Illuminant= D65
             float Y = ref_Y*var_Y;     //ref_Y = 100.000
             float Z = ref_Z*var_Z;     //ref_Z = 108.883
 
 
-            var_X = X/100.0f;        //X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
+            var_X = X/100.0f;        //X from 0 to  95.047      (Observer = 2?, Illuminant = D65)
             var_Y = Y/100.0f;        //Y from 0 to 100.000
             var_Z = Z/100.0f;        //Z from 0 to 108.883
 
@@ -199,4 +213,3 @@ float3 lab_to_rgb(float3 lab) : COLOR
 
 						return float3(var_R*255.0f, var_G*255.0f, var_B*255.0f);
 }
-
