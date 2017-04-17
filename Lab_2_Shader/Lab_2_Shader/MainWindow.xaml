@@ -30,7 +30,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <!--<ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding ShaderNames}" SelectedIndex="0"/>-->
-            <Image x:Name="Image" Grid.Column="0" Grid.Row="0" Source="Images/5.jpg" 
+            <Image x:Name="Image" Grid.Column="0" Grid.Row="0" Source="Images/Lab_color_at_luminance_75%.png" 
                    Margin="10" MouseDown="Image_MouseDown">
                 <Image.Effect>
                     <shaders:MyShaderEffect x:Name="MyShaderEffect" 

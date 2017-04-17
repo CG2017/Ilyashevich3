@@ -20,7 +20,7 @@
             <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Image Source="Images/1305х864х183.jpg" Grid.RowSpan="3" Margin="20"/>
+        <Image Source="Images/yellow.png" Grid.RowSpan="3" Margin="20"/>
 
         <telerik:RadComboBox ItemsSource="{Binding Histograms}" Grid.Column="1" Grid.Row="0" Margin="20"
                              SelectedItem="{Binding SelectedHistogram, Mode=TwoWay}">

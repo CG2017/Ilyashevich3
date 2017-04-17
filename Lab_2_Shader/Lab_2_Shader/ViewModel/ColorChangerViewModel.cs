@@ -18,7 +18,7 @@ namespace Lab_2_Shader.ViewModels
         private float _tolerance;
         private ObservableCollection<String> _shaderNames;
 
-    public Color SourceColor
+        public Color SourceColor
         {
             get
             {
@@ -80,7 +80,7 @@ namespace Lab_2_Shader.ViewModels
         {
             SourceColor = Color.FromRgb(0,255,0);
             TargetColor = Colors.Yellow;
-            Tolerance = 0.3f;
+            Tolerance = 0.25f;
             _shaderNames = new ObservableCollection<String>
             {
                 ShaderKeys.Shader76,

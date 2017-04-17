@@ -1,0 +1,63 @@
+﻿<Window x:Class="Lab_4_Info.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Lab_4_Info.ViewModels"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525"
+        WindowState="Maximized">
+    <Window.DataContext>
+        <viewModels:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox Text="{Binding ImagesPath}" Margin="10"/>
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <CheckBox IsChecked="{Binding ShowImages}"></CheckBox>
+            <Label Content="Show Images"></Label>
+        </StackPanel>
+        <Button Grid.Column="2" Grid.Row="0" Content="Go" Margin="10" Command="{Binding UpdateCommand}"/>
+        <!--<telerik:RadBusyIndicator Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
+                                  IsBusy="{Binding IsUpdating}" Visibility="Visible">
+            <telerik:RadBusyIndicator.Content>-->
+        <ListView  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
+                   VirtualizingStackPanel.IsVirtualizing="True"
+                   ScrollViewer.CanContentScroll="True"
+                   ScrollViewer.IsDeferredScrollingEnabled="True"
+                  ItemsSource="{Binding Infos}">
+                <ListView.View>
+                    <GridView>
+                        <!--<GridViewColumn Header="Image" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding FullPath}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>-->
+                        <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="Size (pixels)" Width="150" DisplayMemberBinding="{Binding Size}" />
+                        <GridViewColumn Header="Resolution (dpi)" Width="100" DisplayMemberBinding="{Binding Resolution}" />
+                        <GridViewColumn Header="Count of colors" Width="100" DisplayMemberBinding="{Binding CountOfColorsInPalette}" />
+                        <GridViewColumn Header="Pixel format" Width="200" DisplayMemberBinding="{Binding PixelFormat}" />
+                        <GridViewColumn Header="Compression" Width="200" DisplayMemberBinding="{Binding Compression}" />
+                            
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <!--</telerik:RadBusyIndicator.Content>
+        </telerik:RadBusyIndicator>-->
+        <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding UpdateTime}" 
+               ContentStringFormat="Updating time: {0}"></Label>
+    </Grid>
+</Window>

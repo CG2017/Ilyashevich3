@@ -91,7 +91,7 @@ namespace Lab_3_Histograms.ViewModels
 
         public MainViewModel()
         {
-            ImagePath = @"Images/1305х864х183.jpg";
+            ImagePath = @"Images/yellow.png";
             Image = new Bitmap(new FileStream(@"../../" + ImagePath, FileMode.Open));
             byte[,,] rgb =  BitmapToByteRgb(Image);
             PixelsCount = rgb.Length/3;
