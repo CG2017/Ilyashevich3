@@ -13,7 +13,7 @@ namespace Lab_5_Rasterization.Model
     {
         public const String StepByStep = "Step by Step";
         public const String DDA = "DDA";
-        public const String BresenhamLine = "Bresenham_Line";
-        public const String BresenhamCircle = "Bresenham_Circle";
+        public const String BresenhamLine = "Bresenham Line";
+        public const String BresenhamCircle = "Bresenham Circle";
     }
 }

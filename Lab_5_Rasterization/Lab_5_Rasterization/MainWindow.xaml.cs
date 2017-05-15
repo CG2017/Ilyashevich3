@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Lab_5_Rasterization.Model;
 using Lab_5_Rasterization.ViewModel;
@@ -14,6 +16,7 @@ namespace Lab_5_Rasterization
     {
         private MainViewModel mainViewModel;
         private List<Rectangle> rectangles = new List<Rectangle>();
+        private Ellipse circle = new Ellipse();
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -53,7 +56,7 @@ namespace Lab_5_Rasterization
                         mainViewModel.FinishX, mainViewModel.FinishY);
                     break;
                 case AlgorithmsNames.BresenhamCircle:
-                    UseBresenhamCircle(mainViewModel.StartX, mainViewModel.StartY,
+                    MyBresenhamCircle(mainViewModel.StartX, mainViewModel.StartY,
                         mainViewModel.Radius);
                     break;
                 default:
@@ -68,15 +71,20 @@ namespace Lab_5_Rasterization
             double k = ((double)y - (double)mainViewModel.FinishY)/((double)x - (double)mainViewModel.FinishX);
             double b = y - k*x;
             Paint(x, y);
-            while (x < mainViewModel.FinishX)
+            while (x != mainViewModel.FinishX)
             {
-                x++;
-                y++;
+                if (mainViewModel.FinishX > x)
+                    x++;
+                else
+                    x--;
                 int newY = (int)Math.Round(k*x + b);
-                while (y <= newY)
+                while (y != newY)
                 {
+                    if(newY > y)
+                        y++;
+                    else
+                        y--;
                     Paint(x, y);
-                    y++;
                 }
             }
         }
@@ -174,37 +182,95 @@ namespace Lab_5_Rasterization
                 }
             }
         }
-        public void UseBresenhamCircle( int _x, int _y, int radius)
-        {
-            int x = 0, y = radius, gap = 0, delta = (2 - 2 * radius);
-            while (y >= 0)
-            {
-                if(mainViewModel.ValidatePoint(_x + x, _y + y))
-                    Paint(_x + x, _y + y);
-                if (mainViewModel.ValidatePoint(_x + x, _y - y))
-                    Paint(_x + x, _y - y);
-                if (mainViewModel.ValidatePoint(_x - x, _y - y))
-                    Paint( _x - x, _y - y);
-                if (mainViewModel.ValidatePoint(_x - x, _y + y))
-                    Paint( _x - x, _y + y);
-                gap = 2 * (delta + y) - 1;
-                if (delta < 0 && gap <= 0)
-                {
-                    x++;
-                    delta += 2 * x + 1;
-                    continue;
+        public void MyBresenhamCircle(int x0, int y0, int radius) {
+            int x = 0;
+            int y = radius;
+            PutCirclePixel(x0, y0, x, y);
+            while (y > 0) {
+                int xr = x + 1;
+                int xv = x;
+                int xd = x + 1;
+                int yr = y;
+                int yv = y - 1;
+                int yd = y - 1;
+                double diffR = CountDiff(xr, yr, radius);
+                double diffV = CountDiff(xv, yv, radius);
+                double diffD = CountDiff(xd, yd, radius);
+                if (diffR < diffD && diffR < diffV) {
+                    PutCirclePixel(x0, y0, xr, yr);
+                    x = xr;
+                    y = yr;
                 }
-                if (delta > 0 && gap > 0)
-                {
-                    y--;
-                    delta -= 2 * y + 1;
-                    continue;
+                else if (diffV < diffD && diffV < diffD) {
+                    PutCirclePixel(x0, y0, xv, yv);
+                    x = xv;
+                    y = yv;
                 }
-                x++;
-                delta += 2 * (x - y);
-                y--;
+                else {
+                    PutCirclePixel(x0, y0, xd, yd);
+                    x = xd;
+                    y = yd;
+                }
             }
+            circle = new Ellipse() {
+                Margin = new Thickness((x0 - radius) * 30 - 15, 600 - ((y0 + radius) * 30 - 15), 0, 0),
+                Width = radius * 2 * 30,
+                Height = radius * 2 * 30,
+                Stroke = new SolidColorBrush(Colors.Red)
+            };
+            Canvas.Children.Add(circle);
         }
+        public void PutCirclePixel(int x0, int y0, int x, int y) {
+            Paint(x0 + x, y0 + y);
+            Paint(x0 + x, y0 - y);
+            Paint(x0 - x, y0 - y);
+            Paint(x0 - x, y0 + y);
+        }
+
+        public double CountDiff(int x, int y, int radius) {
+            double dist = Math.Sqrt(x * x + y * y);
+            double diff = Math.Abs(dist - radius);
+            return diff;
+        }
+        //public void UseBresenhamCircle( int _x, int _y, int radius)
+        //{
+        //    int x = 0, y = radius, gap = 0, delta = (2 - 2 * radius);
+        //    while (y >= 0)
+        //    {
+        //        if(mainViewModel.ValidatePoint(_x + x, _y + y))
+        //            Paint(_x + x, _y + y);
+        //        if (mainViewModel.ValidatePoint(_x + x, _y - y))
+        //            Paint(_x + x, _y - y);
+        //        if (mainViewModel.ValidatePoint(_x - x, _y - y))
+        //            Paint( _x - x, _y - y);
+        //        if (mainViewModel.ValidatePoint(_x - x, _y + y))
+        //            Paint( _x - x, _y + y);
+        //        gap = 2 * (delta + y) - 1;
+        //        if (delta < 0 && gap <= 0)
+        //        {
+        //            x++;
+        //            delta += 2 * x + 1;
+        //            continue;
+        //        }
+        //        if (delta > 0 && gap > 0)
+        //        {
+        //            y--;
+        //            delta -= 2 * y + 1;
+        //            continue;
+        //        }
+        //        x++;
+        //        delta += 2 * (x - y);
+        //        y--;
+        //    }
+        //    circle = new Ellipse()
+        //    {
+        //        Margin = new Thickness((_x - radius)*30 - 15, 600 - ((_y + radius)*30 - 15), 0, 0),
+        //        Width = radius*2*30,
+        //        Height = radius*2*30,
+        //        Stroke = new SolidColorBrush(Colors.Red)
+        //    };
+        //    Canvas.Children.Add(circle);
+        //}
         private void Paint(int x, int y)
         {
             Rectangle myRect = new System.Windows.Shapes.Rectangle();
@@ -222,6 +288,7 @@ namespace Lab_5_Rasterization
             foreach(var rect in rectangles)
                 Canvas.Children.Remove(rect);
             rectangles.Clear();
+            Canvas.Children.Remove(circle);
         }
     }
 }
