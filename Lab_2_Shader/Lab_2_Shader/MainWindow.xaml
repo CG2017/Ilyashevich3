@@ -26,11 +26,19 @@
         </Grid.RowDefinitions>
         <Grid Grid.Column="0" Grid.Row="0" Margin="10">
             <Grid.RowDefinitions>
-                <!--<RowDefinition Height="Auto"/>-->
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <!--<ComboBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding ShaderNames}" SelectedIndex="0"/>-->
-            <Image x:Name="Image" Grid.Column="0" Grid.Row="0" Source="Images/Lab_color_at_luminance_75%.png" 
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ImageName, Mode=OneWay}" IsReadOnly="True"/>
+                <Button Grid.Row="0" Grid.Column="1" Content="Choose Image" Command="{Binding ChooseImageCommand}"/>
+
+            </Grid>
+            <Image x:Name="Image" Grid.Column="0" Grid.Row="1" Source="{Binding ImageName}"
                    Margin="10" MouseDown="Image_MouseDown">
                 <Image.Effect>
                     <shaders:MyShaderEffect x:Name="MyShaderEffect" 

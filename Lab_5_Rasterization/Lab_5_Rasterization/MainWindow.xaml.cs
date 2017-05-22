@@ -232,45 +232,40 @@ namespace Lab_5_Rasterization
             double diff = Math.Abs(dist - radius);
             return diff;
         }
-        //public void UseBresenhamCircle( int _x, int _y, int radius)
-        //{
-        //    int x = 0, y = radius, gap = 0, delta = (2 - 2 * radius);
-        //    while (y >= 0)
-        //    {
-        //        if(mainViewModel.ValidatePoint(_x + x, _y + y))
-        //            Paint(_x + x, _y + y);
-        //        if (mainViewModel.ValidatePoint(_x + x, _y - y))
-        //            Paint(_x + x, _y - y);
-        //        if (mainViewModel.ValidatePoint(_x - x, _y - y))
-        //            Paint( _x - x, _y - y);
-        //        if (mainViewModel.ValidatePoint(_x - x, _y + y))
-        //            Paint( _x - x, _y + y);
-        //        gap = 2 * (delta + y) - 1;
-        //        if (delta < 0 && gap <= 0)
-        //        {
-        //            x++;
-        //            delta += 2 * x + 1;
-        //            continue;
-        //        }
-        //        if (delta > 0 && gap > 0)
-        //        {
-        //            y--;
-        //            delta -= 2 * y + 1;
-        //            continue;
-        //        }
-        //        x++;
-        //        delta += 2 * (x - y);
-        //        y--;
-        //    }
-        //    circle = new Ellipse()
-        //    {
-        //        Margin = new Thickness((_x - radius)*30 - 15, 600 - ((_y + radius)*30 - 15), 0, 0),
-        //        Width = radius*2*30,
-        //        Height = radius*2*30,
-        //        Stroke = new SolidColorBrush(Colors.Red)
-        //    };
-        //    Canvas.Children.Add(circle);
-        //}
+        public void UseBresenhamCircle(int _x, int _y, int radius) {
+            int x = 0, y = radius, gap = 0, delta = (2 - 2 * radius);
+            while (y >= 0) {
+                if (mainViewModel.ValidatePoint(_x + x, _y + y))
+                    Paint(_x + x, _y + y);
+                if (mainViewModel.ValidatePoint(_x + x, _y - y))
+                    Paint(_x + x, _y - y);
+                if (mainViewModel.ValidatePoint(_x - x, _y - y))
+                    Paint(_x - x, _y - y);
+                if (mainViewModel.ValidatePoint(_x - x, _y + y))
+                    Paint(_x - x, _y + y);
+                gap = 2 * (delta + y) - 1;
+                if (delta < 0 && gap <= 0) {
+                    x++;
+                    delta += 2 * x + 1;
+                    continue;
+                }
+                if (delta > 0 && gap > 0) {
+                    y--;
+                    delta -= 2 * y + 1;
+                    continue;
+                }
+                x++;
+                delta += 2 * (x - y);
+                y--;
+            }
+            circle = new Ellipse() {
+                Margin = new Thickness((_x - radius) * 30 - 15, 600 - ((_y + radius) * 30 - 15), 0, 0),
+                Width = radius * 2 * 30,
+                Height = radius * 2 * 30,
+                Stroke = new SolidColorBrush(Colors.Red)
+            };
+            Canvas.Children.Add(circle);
+        }
         private void Paint(int x, int y)
         {
             Rectangle myRect = new System.Windows.Shapes.Rectangle();

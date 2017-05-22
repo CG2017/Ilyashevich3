@@ -16,6 +16,7 @@ namespace Lab_2_Shader.ViewModels
         private Color _sourceColor;
         private Color _targetColor;
         private float _tolerance;
+        private string _imageName;
         private ObservableCollection<String> _shaderNames;
 
         public Color SourceColor
@@ -74,7 +75,17 @@ namespace Lab_2_Shader.ViewModels
                 RaisePropertyChanged(nameof(ShaderNames));
             }
         }
+        public string ImageName {
+            get { return _imageName; }
+            set {
+                if (value != _imageName) {
+                    _imageName = value;
+                    RaisePropertyChanged(nameof(ImageName));
+                }
+            }
+        }
 
+        public RelayCommand ChooseImageCommand { get; private set; }
 
         public ColorChangerViewModel()
         {
@@ -86,6 +97,25 @@ namespace Lab_2_Shader.ViewModels
                 ShaderKeys.Shader76,
                 ShaderKeys.Shader94
             };
+            ChooseImageCommand = new RelayCommand(ChooseImage);
+            ImageName = @"C:/Users/kathe/Documents/3_курс/6_сем/ComputerGraphics/Labs/Lab_2_Shader/Lab_2_Shader/Images/Lab_color_at_luminance_75%.png";
+        }
+        private void ChooseImage() {
+            // Configure open file dialog box
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Title = "Open Image";
+            dlg.FileName = "Images"; // Default file name
+            dlg.DefaultExt = ".jpg"; // Default file extension
+            dlg.Filter = "Images (.jpg)|*.jpg; *.jpeg; *.bmp; *.gif; *.png;"; // Filter files by extension
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true) {
+                // Open document
+                ImageName = dlg.FileName;
+            }
         }
     }
 }
